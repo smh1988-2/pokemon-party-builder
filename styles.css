@@ -1,0 +1,24 @@
+#poke-information {
+    background: white;
+    width: 50%;
+    text-align: left;
+    /* padding: 5px; */
+    border: 1px solid grey;
+    /* color: #2a75bb;  */
+    text-
+}
+
+#poke-information img {
+    width: 50%;
+}
+
+#name, #number {
+    color:#2a75bb;
+    border-bottom: 1px solid black;
+}
+
+#name p, #number p {
+    color:#2a75bb;
+    padding: 0px 0px 0px 10px;
+    margin: 5px 5px 5px 5px;
+}

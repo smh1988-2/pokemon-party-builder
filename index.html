@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon Party Builder</title>
+    <script src="index.js" defer></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="forms">
+        <form id="poke-search">
+            <input type="text" id="query" placeholder="Pikachu, Ditto, Charizard...">
+            <br /><br />
+            <input type="submit" value="Search">
+        </form>
+
+        <form id="language-form">
+            <label for="language">Language</label>
+            <select name="language" id="language">
+            <option value="English">English</option>
+            <option value="Spanish">Spanish</option>
+            </select>
+        </form>
+    </div>
+    <div>
+        <p id="intro">Poke information:</p>
+    </div>
+    <div id="poke-information">
+        <div id="name">
+            <p>Pokemon: Ditto</p>
+        </div>
+        <div id="number">
+            <p>Number: 49</p>
+        </div>
+        <div id="type">
+            <p>Type: Normal</p>
+        </div>
+        <div id="image">
+            <img src="132.png">
+        </div>
+        <div id="weaknesses">
+            <p>Weaknesses: Fire, Fighting</p>
+        </div>
+        <div id="addToParty">
+            <button>Add to Party</button>
+        </div>
+    </div>
+</body>
+</html>
