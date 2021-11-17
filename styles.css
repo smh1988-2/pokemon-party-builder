@@ -1,31 +1,48 @@
 html {
     font-family: Arial, Helvetica, sans-serif;
+    color: rgb(0, 0, 0)
 }
+ 
+#top-card {
+    animation: myAnim 2s ease 0s 1 normal forwards;
+       box-shadow: 5px 5px 15px 1px #e4000f;       
+   }
 
-#poke-information {
-    background: white;
-    width: 50%;
-    text-align: left;
-    /* padding: 5px; */
-    border: 1px solid grey;
-    /* color: #2a75bb;  */
-}
-
-#poke-information img {
-    width: 50%;
-}
-
-#number {
-    color:#2a75bb;
-    border-bottom: 1px solid grey;
-}
-
-#name {
-    border-bottom: 1px solid grey;
-}
-
-#name p, #number p, #type p {
-    color:#2a75bb;
-    padding: 0px 0px 0px 10px;
-    margin: 5px 5px 5px 5px;
-}
+   @keyframes myAnim {
+       0% {
+         animation-timing-function: ease-in;
+         opacity: 1;
+         transform: translateY(-45px);
+       }
+       24% {
+         opacity: 1;
+       }
+       40% {
+         animation-timing-function: ease-in;
+         transform: translateY(-24px);
+       }
+       65% {
+         animation-timing-function: ease-in;
+         transform: translateY(-12px);
+       }
+       82% {
+         animation-timing-function: ease-in;
+         transform: translateY(-6px);
+       }
+       93% {
+         animation-timing-function: ease-in;
+         transform: translateY(-4px);
+       }
+       25%,
+       55%,
+       75%,
+       87% {
+         animation-timing-function: ease-out;
+         transform: translateY(0px);
+       }
+       100% {
+         animation-timing-function: ease-out;
+         opacity: 1;
+         transform: translateY(0px);
+       }
+     }
