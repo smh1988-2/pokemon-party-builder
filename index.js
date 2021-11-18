@@ -1,60 +1,62 @@
 const BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
+const myParty = [];
 
 const searchResultsContainer = document.getElementById("search-results-cointainer");
-const pokeCard = document.createElement("div");
 const firstPartyMember = document.getElementById("firstPartyMember");
-const party = document.getElementById("party");
 const teamStats = document.getElementById("team-stats");
-const myParty = [];
+const typeEffectivenessContainer = document.getElementById("type-effectiveness")
+let pokeQuery;
+
+const pokeCard = document.createElement("div");
+
 const pickRandomPokemon = document.getElementById("randomPokemon")
 pickRandomPokemon.addEventListener("click", e => searchForRandomPokemon(e))
+
 const form = document.getElementById("poke-search-form");
 form.addEventListener("submit", (e) => pokeSearch(e));
 
-let pokeQuery;
-
 function searchForRandomPokemon() {
   let randomPokemonId = Math.floor(Math.random() * 901);
-  console.log(randomPokemonId)
-
+  loadingAnimation();
   fetch(`https://pokeapi.co/api/v2/pokemon/${randomPokemonId}`)
   .then((resp) => resp.json())
-  .then((data) => renderPokemon(data));
+  .then((data) => {
+    
+    setTimeout(function() {renderPokemon(data)}, 2000);
+  });
 }
 
 function pokeSearch(e) {
   e.preventDefault();
   pokeQuery = e.srcElement[0].value;
   pokeQuery = pokeQuery.toLowerCase();
-  console.log(pokeQuery);
-
+  loadingAnimation();
   fetch(`${BASE_URL}${pokeQuery}`)
     .then((resp) => resp.json())
-    .then((data) => renderPokemon(data));
-  // .catch((error) => {
-  //   alert("Not a pokemon");
-  // });
+    .then((data) => {
+      setTimeout(function() {renderPokemon(data)}, 2000);
+    })
+  .catch((error) => {
+    alert("That's not a Pokemon!");
+  });
 
   form.reset();
 }
 
+function loadingAnimation() {
+  pokeCard.innerHTML = `<img src="Spinner-1s-200px.gif" class="img-fluid rounded mx-auto d-block"/>`
+  searchResultsContainer.append(pokeCard)
+}
+
 function renderPokemon(data) {
+  const pokePic = data.sprites.other["official-artwork"].front_default;
+  const pokeName = data.name.charAt(0).toUpperCase() + data.name.slice(1);
+  const pokeOrder = data.order;
   console.log(data);
 
   pokeCard.innerHTML = "";
 
-  const pokeName = data.name.charAt(0).toUpperCase() + data.name.slice(1);
-  const pokePic = data.sprites.other["official-artwork"].front_default;
-  const pokeOrder = data.order;
-
-//   const pokeFirstAbility =
-//     data.abilities[0].ability.name.charAt(0).toUpperCase() +
-//     data.abilities[0].ability.name.slice(1);
-// console.log(data.abilities.length)
-//     if (data.abilities.length === 2) {
-//     const pokeSecondAbility = data.abilities[1].ability.name.charAt(0).toUpperCase() + data.abilities[1].ability.name.slice(1);
-//   }
-
+  //Creating a pokeAbilities variable and then use if/else to render 1-3 abilities
   let pokeAbilities;
   let pokeFirstAbility =
   data.abilities[0].ability.name.charAt(0).toUpperCase() +
@@ -78,8 +80,6 @@ function renderPokemon(data) {
     data.abilities[2].ability.name.slice(1);
     pokeAbilities = `${pokeFirstAbility} / ${pokeSecondAbility} / ${pokeThirdAbility}`;
   }
-
-
 
   //Creating a pokeType variable and use an if/then to render 1 or 2 types
   let pokeType;
@@ -115,7 +115,7 @@ function renderPokemon(data) {
               <li class="list-group-item">Number: ${pokeOrder}</li>
               <li class="list-group-item">Abilities: ${pokeAbilities}</li>
               <li class="list-group-item">
-              <strong>Base Stats:</strong>
+              <strong>Base Stats:<br /></strong>
               HP: ${hp}<br />
               Attack: ${attack}<br />
               Defense: ${defense}<br />
@@ -144,20 +144,24 @@ function renderPokemon(data) {
     } else {
       alert("You already have 6 Pokemon in your party!");
     }
-    // callType(data)
+    callType(data)
   }
 }
 
 function getMyParty() {
   firstPartyMember.innerHTML = "";
   myParty.forEach((partyMember) => renderMyParty(partyMember));
-  teamStats.innerHTML = "" //fix this
+  teamStats.innerHTML = ""
   runPartyTotals();
 }
 
+let partyMemberCard = document.createElement("div");
+
 function renderMyParty(member) {
+  
   let partyMemberCard = document.createElement("div");
   partyMemberCard.className = "col-2"
+  
   let memberName = member.name.charAt(0).toUpperCase() + member.name.slice(1);
 
 
@@ -175,16 +179,25 @@ function renderMyParty(member) {
       memberType = `${pokeType1} / ${pokeType2}`;
   }
 
-
-
   let memberImage = member.sprites.other["official-artwork"].front_default;
   let partyId = myParty.indexOf(member);
+  
+  let typeEffectivenessButton = document.createElement("radio");
+  typeEffectivenessButton.className = "btn btn-outline-warning center-block col-10";
+  typeEffectivenessButton.id = "typeEffectivenessButton";
+  typeEffectivenessButton.textContent = "Type Effectiveness";
+  typeEffectivenessButton.addEventListener("click", (e) => callType(member));
+
+  let spacer = document.createElement("br")
+  console.log(spacer)
 
   let deleteButton = document.createElement("button");
   deleteButton.className = "btn btn-outline-danger center-block col-10";
   deleteButton.id = "deleteButton";
   deleteButton.textContent = "Remove";
   deleteButton.addEventListener("click", (e) => removeFromParty(partyId));
+  
+  partyMemberStatsHolder = document.createElement("p")
 
   partyMemberCard.innerHTML = ` 
   <div class="col-6 card d-inline border-0" style="width: 16%;">
@@ -197,14 +210,22 @@ function renderMyParty(member) {
     </div>
     </div>
     `;
-
+  partyMemberCard.append(typeEffectivenessButton)
+  partyMemberCard.append(spacer)
+  partyMemberCard.append(spacer)
+  partyMemberCard.append(spacer)
   partyMemberCard.append(deleteButton);
+  
+  // partyMemberCard.append(partyMemberStatsHolder)
   firstPartyMember.append(partyMemberCard);
+  
+  
 }
 
 function removeFromParty(pokemonToRemove) {
   myParty.splice(pokemonToRemove, 1);
   getMyParty();
+  callType()
 }
 
 
@@ -232,57 +253,59 @@ teamStats.appendChild(teamStatsIntro)
 
 function renderTotals(statName, statValue) {
     let renderedTotals = document.createElement("li")
-    teamStatsIntro.innerText = "Your Team's Stats"
     renderedTotals.className = "list-group-item border-0"
-    renderedTotals.innerText = `${statName}: ${statValue}`
-    
+    renderedTotals.innerText = `Total ${statName}: ${statValue}`
     teamStats.appendChild(renderedTotals)
 }
 
-// function callType(data) {
-// fetch(data.types[0].type.url)
-//     .then((resp) => resp.json())
-//     .then((typeData) => typeAttributes(typeData));
-// }
 
-// function typeAttributes(typeData) {
-//   attributeRepeater(
-//     typeData.damage_relations.double_damage_to,
-//     "doubleDamageTo",
-//     "💪 Double damage to "
-//   );
-//   attributeRepeater(
-//     typeData.damage_relations.half_damage_from,
-//     "halfDamageFrom",
-//     "💪 Half damage from "
-//   );
-//   attributeRepeater(
-//     typeData.damage_relations.no_damage_from,
-//     "noDamageFrom",
-//     "💪 No damage from "
-//   );
-//   attributeRepeater(
-//     typeData.damage_relations.double_damage_from,
-//     "doubleDamageFrom",
-//     "👎 Double damage from "
-//   );
-//   attributeRepeater(
-//     typeData.damage_relations.half_damage_to,
-//     "halfDamageTo",
-//     "👎 Half damage to "
-//   );
-//   attributeRepeater(
-//     typeData.damage_relations.no_damage_to,
-//     "noDamageTo",
-//     "👎 No damage to "
-//   );
-// }
 
-// function attributeRepeater(path, attribute, text) {
-//   for (i = 0; i < path.length; i++) {
-//     let attribute = document.createElement("p");
-//     attribute.innerHTML = `${text} <strong>${path[i].name}</strong>`;
-//     let typeAttributes2 = document.getElementById("typeAttributes")
-//     typeAttributes2.innerHTML = `${attribute}`;
-//   }
-// }
+
+//FIX THIS SHIT
+function callType(data) {
+  typeEffectivenessContainer.innerHTML = ""
+  fetch(data.types[0].type.url)
+    .then((resp) => resp.json())
+    .then((typeData) => typeAttributes(typeData));
+}
+
+function typeAttributes(typeData) {
+  attributeRepeater(
+    typeData.damage_relations.double_damage_to,
+    "doubleDamageTo",
+    "💪 Double damage to "
+  );
+  attributeRepeater(
+    typeData.damage_relations.half_damage_from,
+    "halfDamageFrom",
+    "💪 Half damage from "
+  );
+  attributeRepeater(
+    typeData.damage_relations.no_damage_from,
+    "noDamageFrom",
+    "💪 No damage from "
+  );
+  attributeRepeater(
+    typeData.damage_relations.double_damage_from,
+    "doubleDamageFrom",
+    "👎 Double damage from "
+  );
+  attributeRepeater(
+    typeData.damage_relations.half_damage_to,
+    "halfDamageTo",
+    "👎 Half damage to "
+  );
+  attributeRepeater(
+    typeData.damage_relations.no_damage_to,
+    "noDamageTo",
+    "👎 No damage to "
+  );
+}
+
+function attributeRepeater(path, attribute, text) {
+  for (i = 0; i < path.length; i++) {
+    let attribute = document.createElement("p");
+    attribute.innerHTML = `${text} <strong>${path[i].name}</strong>`;
+    typeEffectivenessContainer.append(attribute);
+  }
+}

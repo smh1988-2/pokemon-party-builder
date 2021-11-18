@@ -1,101 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Poke Party Builder</title>
     <script src="index.js" defer></script>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
     <link href="favicon.png" rel="icon" type="image/x-icon" />
-</head>
-<body>
-
-  <nav class="navbar navbar-light bg-white">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">
-        <img src="pokemon_go_play_game_cinema_film_movie_icon-icons.com_69163.png" alt="" height="24" class="d-inline-block align-text-top">
-        Poké Party Builder
-      </a>
-    </div>
-  </nav>
- 
-<form id="poke-search-form">
-    <div class="container-fluid">
+  </head>
+  <body>
+    <nav class="navbar navbar-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img
+            src="pokemon_go_play_game_cinema_film_movie_icon-icons.com_69163.png"
+            alt=""
+            height="24"
+            class="d-inline-block align-text-top"
+          />
+          Poké Party Builder
+        </a>
+      </div>
+    </nav>
+    <br /><br />
+    <form id="poke-search-form">
+      <div class="container-fluid">
         <div class="row align-items-start">
+          <div class="col"></div>
           <div class="col">
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Pikachu, Ditto, Charizard..."
+                aria-label="Pikachu, Ditto, Charizard..."
+                aria-describedby="button-addon2"
+              />
+
+              <button
+                class="btn btn-outline-secondary"
+                type="submit"
+                id="button-addon2">Search</button>
+              <p>
+                <br />Try searching for your favorite Pokemon and adding it to
+                your party! Or try a
+                <a id="randomPokemon" href="#">random Pokemon</a>.
+              </p>
+            </div>
           </div>
-                <div class="col">
-                    <div class="input-group mb-3">
 
-                        <input type="text" class="form-control" placeholder="Pikachu, Ditto, Charizard..." aria-label="Pikachu, Ditto, Charizard..." aria-describedby="button-addon2">
-
-                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
-<p><br />Try searching for your favorite Pokemon and adding it to your party! Or try a <a id="randomPokemon" href="#">random Pokemon</a>.</p>
-                      </div>  
-                </div>
-
-                <div class="col">
-              </div>
+          <div class="col"></div>
         </div>
       </div>
     </form>
     <br /><br />
- 
+
     <div class="container-fluid">
       <div class="row">
+        <div class="col"></div>
 
-        <div class="col">
-        </div>
-       
-        <div class="col-4" id="search-results-cointainer">
-        </div>
-      
-        <div class="col">
-        </div>
-        
+        <div class="col-4" id="search-results-cointainer"></div>
+          <!-- Javascript inserts search results here -->
+        <div class="col"></div>
       </div>
     </div>
 
-
-   
-
-
-
-<br /><br />
-<div class="col-12 text-center"><h2 class="ext-center">My Party</h2></div>
-
-   
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-12 d-inline-flex" id="firstPartyMember">
-
-        <!-- Javascript inserts code here --> 
-        
-
-    </div>
-  </div>
-</div>
-
-<br /><br /><br />
-<div class="container-fluid">
-  <div class="row">
-
-    <div class="col">
+    <br /><br />
+    <div class="col-12 text-center">
+      <img src="Pokeball_icon-icons.com_67448.png" height="50" />
+      <h2>My Party</h2>
     </div>
 
-    <div id="team-stats" class="d-inline-flex text-center">
-      
-      <br /><br /><br />
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 d-inline-flex" id="firstPartyMember">
+          <!-- Javascript inserts party members here -->
+        </div>
+      </div>
     </div>
-    <div class="col">
-    </div>
-</div>
-</div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
     <br /><br /><br />
-</body>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-6 text-center">
+          <img src="Pokeball_icon-icons.com_67448.png" height="50" />
+          <h2 class="text-center">Type effectiveness</h2>
+          <div id="type-effectiveness">
+            <!--Javascript inserts type effectiveness here-->
+          </div>
+        </div>
+
+        <div class="col-6 text-center">
+          <img src="Pokeball_icon-icons.com_67448.png" height="50" />
+          <h2>My Party Base Stats</h2>
+          <div id="team-stats">
+            <!-- Javascript inserts party stat totals here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br /><br /><br /><br />
+
+    <div class="col-12 text-center" style="bottom: 0px">
+      <p>
+        Made with ❤️ in CA & CO by
+        <a href="https://github.com/rivkah777/">Rebekah</a> &
+        <a href="https://github.com/smh1988-2">Sean</a>.
+      </p>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    
+  </body>
 </html>

@@ -46,3 +46,8 @@ html {
          transform: translateY(0px);
        }
      }
+
+     .navbar {
+         background-color: #3B4CCA;
+     }
+      
