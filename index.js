@@ -1,3 +1,4 @@
+
 const BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
 let myParty = [];
 
@@ -309,4 +310,18 @@ function attributeRepeater(path, attribute, text) {
     attribute.innerHTML = `${text} <strong>${path[i].name}</strong>`;
     typeEffectivenessContainer.append(attribute);
   }
+}
+
+    if (data.types.length === 1) {
+    pokeType.innerText = pokeType1
+    } else {
+        let pokeType2 = data.types[1].type.name
+        pokeType.innerText = `${pokeType1} / ${pokeType2}`
+    }
+
+    console.log(pokeType)
+
+    container.append(pokeName, pokeType, pokePic)
+
+
 }
