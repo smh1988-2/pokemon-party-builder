@@ -1,5 +1,15 @@
 const BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
-const myParty = [];
+let myParty = [];
+
+fetch("http://localhost:3000/pokemons")
+.then(resp => resp.json())
+.then(data => { 
+  myParty.push(data) 
+  
+  for (i=0; i<myParty[0].length; i++) {
+  renderMyParty((myParty[0][i]))
+  }
+})
 
 const searchResultsContainer = document.getElementById("search-results-cointainer");
 const firstPartyMember = document.getElementById("firstPartyMember");
@@ -11,6 +21,8 @@ const pokeCard = document.createElement("div");
 
 const pickRandomPokemon = document.getElementById("randomPokemon")
 pickRandomPokemon.addEventListener("click", e => searchForRandomPokemon(e))
+
+// getMyParty();
 
 const form = document.getElementById("poke-search-form");
 form.addEventListener("submit", (e) => pokeSearch(e));
@@ -138,9 +150,29 @@ function renderPokemon(data) {
   addToPartyButton.addEventListener("click", addToParty);
 
   function addToParty() {
-    if (myParty.length < 6) {
-      myParty.push(data);
-      getMyParty();
+    if (myParty[0].length < 6) {
+      fetch("http://localhost:3000/pokemons", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          alert("You can only have one of each Pokemon in your party!")
+          throw new Error('Something went wrong');
+        }
+      })
+      .then(() => { 
+        myParty[0].push(data);
+        getMyParty() 
+      })
+      .catch((error) => {
+        console.log(error)
+      });
     } else {
       alert("You already have 6 Pokemon in your party!");
     }
@@ -150,7 +182,7 @@ function renderPokemon(data) {
 
 function getMyParty() {
   firstPartyMember.innerHTML = "";
-  myParty.forEach((partyMember) => renderMyParty(partyMember));
+  myParty[0].forEach((partyMember) => renderMyParty(partyMember));
   teamStats.innerHTML = ""
   runPartyTotals();
 }
@@ -195,7 +227,7 @@ function renderMyParty(member) {
   deleteButton.className = "btn btn-outline-danger center-block col-10";
   deleteButton.id = "deleteButton";
   deleteButton.textContent = "Remove";
-  deleteButton.addEventListener("click", (e) => removeFromParty(partyId));
+  deleteButton.addEventListener("click", (e) => removeFromParty(member));
   
   partyMemberStatsHolder = document.createElement("p")
 
@@ -211,22 +243,39 @@ function renderMyParty(member) {
     </div>
     `;
   partyMemberCard.append(typeEffectivenessButton)
-  partyMemberCard.append(spacer)
-  partyMemberCard.append(spacer)
-  partyMemberCard.append(spacer)
   partyMemberCard.append(deleteButton);
-  
-  // partyMemberCard.append(partyMemberStatsHolder)
-  firstPartyMember.append(partyMemberCard);
+    firstPartyMember.append(partyMemberCard);
   
   
 }
 
 function removeFromParty(pokemonToRemove) {
-  myParty.splice(pokemonToRemove, 1);
-  getMyParty();
-  callType()
+  myParty.splice(pokemonToRemove.id, 1);
+  console.log(myParty)
+
+  firstPartyMember.innerHTML = ""
+
+  fetch(`http://localhost:3000/pokemons/${pokemonToRemove.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      .then(resp => resp.json())
+      .then(() => {    
+      myParty = [];
+      console.log(myParty)
+      fetch("http://localhost:3000/pokemons")
+      .then(resp => resp.json())
+      .then(data => { 
+        myParty.push(data) 
+        for (i=0; i<myParty[0].length; i++) {
+        renderMyParty((myParty[0][i]))
+        }
+      })})
+  
 }
+  
 
 
 
@@ -261,7 +310,6 @@ function renderTotals(statName, statValue) {
 
 
 
-//FIX THIS SHIT
 function callType(data) {
   typeEffectivenessContainer.innerHTML = ""
   fetch(data.types[0].type.url)
@@ -309,3 +357,5 @@ function attributeRepeater(path, attribute, text) {
     typeEffectivenessContainer.append(attribute);
   }
 }
+
+
