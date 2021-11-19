@@ -1,95 +1,98 @@
 const BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
 let myParty = [];
 
+//fetch any pokemon from the local server and render them
 fetch("http://localhost:3000/pokemons")
-.then(resp => resp.json())
-.then(data => { 
-  myParty.push(data) 
-  
-  for (i=0; i<myParty[0].length; i++) {
-  renderMyParty((myParty[0][i]))
-  }
-})
+  .then((resp) => resp.json())
+  .then((data) => {
+    myParty.push(data);
+    for (i = 0; i < myParty[0].length; i++) {
+      renderMyParty(myParty[0][i]);
+    }
+  });
 
-const searchResultsContainer = document.getElementById("search-results-cointainer");
+//variables to help render to the DOM
+const searchResultsContainer = document.getElementById(
+  "search-results-cointainer"
+);
 const firstPartyMember = document.getElementById("firstPartyMember");
-const teamStats = document.getElementById("team-stats");
-const typeEffectivenessContainer = document.getElementById("type-effectiveness")
-let pokeQuery;
-
+const typeEffectivenessContainer =
+  document.getElementById("type-effectiveness");
+let pokeQuery = null;
+let partyMemberCard = document.createElement("div");
 const pokeCard = document.createElement("div");
 
-const pickRandomPokemon = document.getElementById("randomPokemon")
-pickRandomPokemon.addEventListener("click", e => searchForRandomPokemon(e))
-
-// getMyParty();
-
+//event listeners for search and clicking the Random link.
 const form = document.getElementById("poke-search-form");
 form.addEventListener("submit", (e) => pokeSearch(e));
 
+const pickRandomPokemon = document.getElementById("randomPokemon");
+pickRandomPokemon.addEventListener("click", (e) => searchForRandomPokemon(e));
+
+function loadingAnimation() {
+  pokeCard.innerHTML = `<img src="Spinner-1s-200px.gif" alt="loading gif" class="img-fluid rounded mx-auto d-block"/>`;
+  searchResultsContainer.append(pokeCard);
+}
+
 function searchForRandomPokemon() {
-  let randomPokemonId = Math.floor(Math.random() * 901);
+  let randomPokemonId = Math.floor(Math.random() * 901); //there are 901 pokemon!
   loadingAnimation();
-  fetch(`https://pokeapi.co/api/v2/pokemon/${randomPokemonId}`)
-  .then((resp) => resp.json())
-  .then((data) => {
-    
-    setTimeout(function() {renderPokemon(data)}, 2000);
-  });
+  fetch(BASE_URL + randomPokemonId)
+    .then((resp) => resp.json())
+    .then((data) => {
+      setTimeout(function () {
+        renderPokemon(data);
+      }, 2000);
+    });
 }
 
 function pokeSearch(e) {
   e.preventDefault();
   pokeQuery = e.srcElement[0].value;
-  pokeQuery = pokeQuery.toLowerCase();
+  pokeQuery = pokeQuery.toLowerCase(); //query needs to be in all lowercase to match the API
   loadingAnimation();
   fetch(`${BASE_URL}${pokeQuery}`)
     .then((resp) => resp.json())
     .then((data) => {
-      setTimeout(function() {renderPokemon(data)}, 2000);
+      setTimeout(function () {
+        renderPokemon(data);
+      }, 2000);
     })
-  .catch((error) => {
-    alert("That's not a Pokemon!");
-  });
-
+    .catch(() => {
+      alert("That's not a Pokemon!"); //Shows alert if the search query doesn't match a Pokemon in the API
+    });
   form.reset();
-}
-
-function loadingAnimation() {
-  pokeCard.innerHTML = `<img src="Spinner-1s-200px.gif" class="img-fluid rounded mx-auto d-block"/>`
-  searchResultsContainer.append(pokeCard)
 }
 
 function renderPokemon(data) {
   const pokePic = data.sprites.other["official-artwork"].front_default;
-  const pokeName = data.name.charAt(0).toUpperCase() + data.name.slice(1);
+  const pokeName = data.name.charAt(0).toUpperCase() + data.name.slice(1); //this capitalises the first letter of the string
   const pokeOrder = data.order;
-  console.log(data);
-
   pokeCard.innerHTML = "";
 
   //Creating a pokeAbilities variable and then use if/else to render 1-3 abilities
   let pokeAbilities;
   let pokeFirstAbility =
-  data.abilities[0].ability.name.charAt(0).toUpperCase() +
-      data.abilities[0].ability.name.slice(1);
+    data.abilities[0].ability.name.charAt(0).toUpperCase() +
+    data.abilities[0].ability.name.slice(1);
   let pokeSecondAbility;
   let pokeThirdAbility;
   console.log(data.abilities.length);
 
   if (data.abilities.length === 1) {
     pokeAbilities = pokeFirstAbility;
-  } else if (data.abilities.length === 2){
+  } else if (data.abilities.length === 2) {
     pokeSecondAbility =
-    data.abilities[1].ability.name.charAt(0).toUpperCase() +
-    data.abilities[1].ability.name.slice(1);
+      data.abilities[1].ability.name.charAt(0).toUpperCase() +
+      data.abilities[1].ability.name.slice(1);
     pokeAbilities = `${pokeFirstAbility} / ${pokeSecondAbility}`;
   } else {
     pokeSecondAbility =
-    data.abilities[1].ability.name.charAt(0).toUpperCase() +
-    data.abilities[1].ability.name.slice(1);
-    pokeThirdAbility = data.abilities[2].ability.name.charAt(0).toUpperCase() +
-    data.abilities[2].ability.name.slice(1);
+      data.abilities[1].ability.name.charAt(0).toUpperCase() +
+      data.abilities[1].ability.name.slice(1);
+    pokeThirdAbility =
+      data.abilities[2].ability.name.charAt(0).toUpperCase() +
+      data.abilities[2].ability.name.slice(1);
     pokeAbilities = `${pokeFirstAbility} / ${pokeSecondAbility} / ${pokeThirdAbility}`;
   }
 
@@ -152,52 +155,43 @@ function renderPokemon(data) {
   function addToParty() {
     if (myParty[0].length < 6) {
       fetch("http://localhost:3000/pokemons", {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          alert("You can only have one of each Pokemon in your party!")
-          throw new Error('Something went wrong');
-        }
-      })
-      .then(() => { 
-        myParty[0].push(data);
-        getMyParty() 
-      })
-      .catch((error) => {
-        console.log(error)
-      });
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            alert("You can only have one of each Pokemon in your party!");
+          }
+        })
+        .then(() => {
+          myParty[0].push(data);
+          getMyParty();
+        });
     } else {
       alert("You already have 6 Pokemon in your party!");
     }
-    callType(data)
+    callType(data);
   }
 }
 
+// render the party every time the party is edited
 function getMyParty() {
   firstPartyMember.innerHTML = "";
   myParty[0].forEach((partyMember) => renderMyParty(partyMember));
-  teamStats.innerHTML = ""
-  runPartyTotals();
+  teamStats.innerHTML = "";
 }
 
-let partyMemberCard = document.createElement("div");
-
 function renderMyParty(member) {
-  
   let partyMemberCard = document.createElement("div");
-  partyMemberCard.className = "col-2"
-  
+  partyMemberCard.className = "col-2";
+
   let memberName = member.name.charAt(0).toUpperCase() + member.name.slice(1);
-
-
-  let memberType;
+  let memberType = null;
   let pokeType1 =
     member.types[0].type.name.charAt(0).toUpperCase() +
     member.types[0].type.name.slice(1);
@@ -208,28 +202,25 @@ function renderMyParty(member) {
     pokeType2 =
       member.types[1].type.name.charAt(0).toUpperCase() +
       member.types[1].type.name.slice(1);
-      memberType = `${pokeType1} / ${pokeType2}`;
+    memberType = `${pokeType1} / ${pokeType2}`;
   }
 
   let memberImage = member.sprites.other["official-artwork"].front_default;
-  let partyId = myParty.indexOf(member);
-  
-  let typeEffectivenessButton = document.createElement("radio");
-  typeEffectivenessButton.className = "btn btn-outline-warning center-block col-10";
+
+  let typeEffectivenessButton = document.createElement("button");
+  typeEffectivenessButton.className =
+    "btn btn-outline-warning center-block col-10";
   typeEffectivenessButton.id = "typeEffectivenessButton";
   typeEffectivenessButton.textContent = "Type Effectiveness";
-  typeEffectivenessButton.addEventListener("click", (e) => callType(member));
-
-  let spacer = document.createElement("br")
-  console.log(spacer)
+  typeEffectivenessButton.addEventListener("click", () => callType(member));
 
   let deleteButton = document.createElement("button");
   deleteButton.className = "btn btn-outline-danger center-block col-10";
   deleteButton.id = "deleteButton";
   deleteButton.textContent = "Remove";
-  deleteButton.addEventListener("click", (e) => removeFromParty(member));
-  
-  partyMemberStatsHolder = document.createElement("p")
+  deleteButton.addEventListener("click", () => removeFromParty(member));
+
+  partyMemberStatsHolder = document.createElement("p");
 
   partyMemberCard.innerHTML = ` 
   <div class="col-6 card d-inline border-0" style="width: 16%;">
@@ -242,76 +233,38 @@ function renderMyParty(member) {
     </div>
     </div>
     `;
-  partyMemberCard.append(typeEffectivenessButton)
+  partyMemberCard.append(typeEffectivenessButton);
   partyMemberCard.append(deleteButton);
-    firstPartyMember.append(partyMemberCard);
-  
-  
+  firstPartyMember.append(partyMemberCard);
 }
 
 function removeFromParty(pokemonToRemove) {
   myParty.splice(pokemonToRemove.id, 1);
-  console.log(myParty)
-
-  firstPartyMember.innerHTML = ""
+  firstPartyMember.innerHTML = "";
 
   fetch(`http://localhost:3000/pokemons/${pokemonToRemove.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      })
-      .then(resp => resp.json())
-      .then(() => {    
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((resp) => resp.json())
+    .then(() => {
       myParty = [];
-      console.log(myParty)
-      fetch("http://localhost:3000/pokemons")
-      .then(resp => resp.json())
-      .then(data => { 
-        myParty.push(data) 
-        for (i=0; i<myParty[0].length; i++) {
-        renderMyParty((myParty[0][i]))
-        }
-      })})
-  
+      fetch("http://localhost:3000/pokemons") //fetch-ception. Gets the new party and re-renders it.
+        .then((resp) => resp.json())
+        .then((data) => {
+          myParty.push(data);
+          for (i = 0; i < myParty[0].length; i++) {
+            renderMyParty(myParty[0][i]);
+          }
+        });
+    });
+  runPartyTotals();
 }
-  
-
-
-
-
-function partyTotals(arr, arrPosition, statName) {
-    let statValue = 0
-    for(i = 0; i < arr.length; i++) {
-    statValue += arr[i].stats[arrPosition].base_stat
-    }
-    renderTotals(statName, statValue)
-}
-
-function runPartyTotals() {
-    partyTotals(myParty, 0, "HP");
-    partyTotals(myParty, 1, "Attack");
-    partyTotals(myParty, 2, "Defense");
-    partyTotals(myParty, 3, "Special Attack");
-    partyTotals(myParty, 4, "Special Defense");
-    partyTotals(myParty, 5, "Speed");
-}
-
-let teamStatsIntro = document.createElement("h3")
-teamStats.appendChild(teamStatsIntro)
-
-function renderTotals(statName, statValue) {
-    let renderedTotals = document.createElement("li")
-    renderedTotals.className = "list-group-item border-0"
-    renderedTotals.innerText = `Total ${statName}: ${statValue}`
-    teamStats.appendChild(renderedTotals)
-}
-
-
-
 
 function callType(data) {
-  typeEffectivenessContainer.innerHTML = ""
+  typeEffectivenessContainer.innerHTML = "";
   fetch(data.types[0].type.url)
     .then((resp) => resp.json())
     .then((typeData) => typeAttributes(typeData));
@@ -357,5 +310,3 @@ function attributeRepeater(path, attribute, text) {
     typeEffectivenessContainer.append(attribute);
   }
 }
-
-

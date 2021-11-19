@@ -1,58 +1,58 @@
 html {
-    font-family: Arial, Helvetica, sans-serif;
-    color: rgb(0, 0, 0)
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(0, 0, 0);
 }
 
 h2 {
-    color: #3c5aa6;
+  color: #3c5aa6;
 }
- 
+
+.navbar {
+    background-color: #3b4cca;
+  }  
+
 #top-card {
-    animation: myAnim 2s ease 0s 1 normal forwards;
-    box-shadow: 5px 5px 15px 1px #e4000f;     
-    border-radius: 5%;  
-   }
+  animation: myAnim 2s ease 0s 1 normal forwards;
+  box-shadow: 5px 5px 15px 1px #e4000f;
+  border-radius: 5%;
+}
 
-   @keyframes myAnim {
-       0% {
-         animation-timing-function: ease-in;
-         opacity: 1;
-         transform: translateY(-45px);
-       }
-       24% {
-         opacity: 1;
-       }
-       40% {
-         animation-timing-function: ease-in;
-         transform: translateY(-24px);
-       }
-       65% {
-         animation-timing-function: ease-in;
-         transform: translateY(-12px);
-       }
-       82% {
-         animation-timing-function: ease-in;
-         transform: translateY(-6px);
-       }
-       93% {
-         animation-timing-function: ease-in;
-         transform: translateY(-4px);
-       }
-       25%,
-       55%,
-       75%,
-       87% {
-         animation-timing-function: ease-out;
-         transform: translateY(0px);
-       }
-       100% {
-         animation-timing-function: ease-out;
-         opacity: 1;
-         transform: translateY(0px);
-       }
-     }
+@keyframes myAnim {
+  0% {
+    animation-timing-function: ease-in;
+    opacity: 1;
+    transform: translateY(-45px);
+  }
+  24% {
+    opacity: 1;
+  }
+  40% {
+    animation-timing-function: ease-in;
+    transform: translateY(-24px);
+  }
+  65% {
+    animation-timing-function: ease-in;
+    transform: translateY(-12px);
+  }
+  82% {
+    animation-timing-function: ease-in;
+    transform: translateY(-6px);
+  }
+  93% {
+    animation-timing-function: ease-in;
+    transform: translateY(-4px);
+  }
+  25%,
+  55%,
+  75%,
+  87% {
+    animation-timing-function: ease-out;
+    transform: translateY(0px);
+  }
+  100% {
+    animation-timing-function: ease-out;
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
 
-     .navbar {
-         background-color: #3B4CCA;
-     }
-      
