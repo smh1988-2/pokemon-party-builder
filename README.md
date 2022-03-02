@@ -5,7 +5,7 @@ We used the Poke API to get data on all 901 Pokemon. The API gave us names, imag
 
 There is a local backend (json-server) that saves the user's current team so that it is not lost on reload. 
 
-We used Bootstrap to style the app.
+We used Bootstrap for styling.
 
 ### User Stories
 - I want to search the database for a Pokemon.
