@@ -3,7 +3,7 @@ This single page JavaScript app allows a user to create a team of 6 pokemon and 
 
 We used the Poke API to get data on all 901 Pokemon. The API gave us names, images, abilities and type effectiveness. The user can search the database and add Pokemon to their team (max of 6 Pokemon). 
 
-There is a local backend ((json-server)[https://www.npmjs.com/package/json-server]) that saves the users current team so that it is not lost on reload. 
+There is a local backend (json-server) that saves the user's current team so that it is not lost on reload. 
 
 We used Bootstrap to style the app.
 
